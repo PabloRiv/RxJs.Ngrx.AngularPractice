@@ -1,0 +1,7 @@
+<div>
+  <ul>
+    <li *ngFor="let movie of movies" (click)="onSelect(movie)" [class.selected]="movie === selectedMovie">
+      <button class="delete-button" (click)="deleteMovie(movie)">Delete</button>
+    </li>
+  </ul>
+</div>
