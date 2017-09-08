@@ -1,0 +1,28 @@
+{
+    "Movie": [
+        {
+            "id": 1,
+            "name": "Out of Africa",
+            "rating": "PG",
+            "genre": "romantic drama",
+            "stars": 5,
+            "cast": "Robert Redford, Meryl Streep"
+        },
+        {
+            "id": 2,
+            "name": "The Great Escap",
+            "rating": "PG",
+            "genre": "Action Adventure",
+            "stars": 5,
+            "cast": "Steve McQueen, Robert Gardner"
+        },
+        {
+            "id": 3,
+            "name": "Heat",
+            "rating": "R",
+            "genre": "Action Adventure",
+            "stars": 5,
+            "cast": "Robert DeNiro, Al Pacino, Val Kilmer "
+        }
+    ]
+}
