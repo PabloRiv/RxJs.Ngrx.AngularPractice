@@ -136,15 +136,16 @@ export class MovieComponent implements OnInit {
     let xhr = new XMLHttpRequest();    
       xhr.addEventListener("load", () => {
         let moviecollection: Movie[] = this.movies;        
-        //moviecollection.forEach(m => {
-        for(let i = 0; i < moviecollection.length; i++) {
+        moviecollection.forEach(m => {
+        //for(let i = 0; i < moviecollection.length; i++) {
+        //for(let m of moviecollection) {
           let div = document.createElement("div");
-          div.innerText = moviecollection[i].name;
+          div.innerText = m.name;
           //this.output.appendChild(div);
           //document.getElementById("output").appendChild(div);
           this.output.nativeElement.appendChild(div);
 
-        };
+        });
     });
 
     xhr.open("GET", url);
