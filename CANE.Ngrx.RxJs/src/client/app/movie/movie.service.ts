@@ -1,9 +1,11 @@
+import { Observable } from "rxjs";
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
 import { Response } from "@angular/http";
 
+import { SharedModule } from "../shared/shared.module";
 import { Movie } from "./movie";
+
 
 const api: string = "/api";
 const localPath: string = "";
@@ -20,26 +22,14 @@ export class MovieService {
     });
   }
 
-  // getMovies() {
-  //   return this.http.get<Movie[]>(`${api}/movies`);    
-  // }
-
-  
-  
-
-  // public getLocalMovies(): Observable<Movie> {
-  //   return this.http.get<Movie>('../assets/movies.json')
-  //   .map((response) =>  response)     
-  // }
-
-  public getLocalMovies(): Observable<Movie[]> {
-    return this.http.get<Movie[]>('../assets/movies.json');         
+  public getLocalMovies(url:string): Observable<Movie[]> {
+    return this.http.get<Movie[]>(url);         
   }
 
-  // addMovie(movie: Movie):Observable<Movie[]> {
-  //   return this.http.post(`${api}/movie/`, movie)
-  //   .map((response: Response) => <Movies[]>response.json());
-  // }
+  addMovie(movie: Movie):Observable<Movie[]> {
+    return this.http.post(`${api}/movie/`, movie)
+    .map((response: Response) => <Movie[]>response.json());
+  }
 }
 
 

@@ -1,14 +1,15 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Renderer2 } from "@angular/core";
 import { Observable } from "rxjs";
-
+import { HttpErrorResponse } from "@angular/common/http";
 // import { Observable } from "rxjs/Observable";
 // import "rxjs/add/operator/map";
 // import "rxjs/add/operator/filter";
-// import "rxjs/add/operator/fromEvent";
+//import "rxjs/add/operator/fromEvent";
 
 import { Movie } from "./movie";
 import { MyObserver } from "../shared/miObserver";
 import { MovieService } from "./movie.service";
+import { IncrementService } from "../shared/services/increment.service";
 
 
 @Component({
@@ -17,7 +18,7 @@ import { MovieService } from "./movie.service";
   styleUrls: ["./movie.component.css"]
 })
 export class MovieComponent implements OnInit {
-  numbers = [1,5,9];
+  numbers = [1, 5, 9];
   //source = Observable.from(this.numbers);
   title = "Welcome to the movies"
   count = "empty";
@@ -26,11 +27,11 @@ export class MovieComponent implements OnInit {
   //console.log(this.circle);
 
   movies: Movie[];
-  
-  
+
+
   // XmlHttpRequest
-  @ViewChild("output", {read: ElementRef}) output: ElementRef;
-  @ViewChild("buttonel", {read: ElementRef}) buttonn: ElementRef;
+  @ViewChild("output", { read: ElementRef }) output: ElementRef;
+  @ViewChild("buttonel", { read: ElementRef }) buttonn: ElementRef;
 
   // click = Observable.fromEvent(this.button, "click");
   click = null;
@@ -54,7 +55,7 @@ export class MovieComponent implements OnInit {
   //       y: e.clientY
   //     }
   //   });
-    // }).filter(value => value.x < 500);
+  // }).filter(value => value.x < 500);
 
 
   // demo of using operators
@@ -74,8 +75,10 @@ export class MovieComponent implements OnInit {
   //   .filter(n => n > 4);
 
   // constructor(public count:Observable<number>) { 
-  constructor(private renderer: Renderer2, private el: ElementRef, private service: MovieService) { 
-     //this.count = 6;
+  constructor(private renderer: Renderer2,
+    private el: ElementRef, private service: MovieService,
+    private counter: IncrementService, private observer: MyObserver) {
+    //this.count = 6;
 
   }
 
@@ -83,12 +86,23 @@ export class MovieComponent implements OnInit {
     // this.service.getLocalMovies()
     //   .subscribe(movie => this.movies.push(movie));
 
-    this.service.getLocalMovies()
-    .subscribe(movie => this.movies = movie);
+    
 
-     //this.source.map(res => res.toString()).subscribe(item => this.count = item);
-     //this.source.subscribe(new MyObserver);
-   
+    // this.service.getLocalMovies('../assets/movies.json')
+    //   .subscribe(
+    //   movie => this.movies = movie,
+    //     (err: HttpErrorResponse) => {
+    //       if (err.error instanceof Error) {
+    //         console.log("Client-side error occurred in the getLocalMovies()")
+    //       } else {
+    //         console.log("Server-side error occured in the getLocalMovies()");
+    //       }
+    //     }
+    //   );
+
+    //this.source.map(res => res.toString()).subscribe(item => this.count = item);
+    //this.source.subscribe(new MyObserver);
+
     // used with demo about events
     //console.log(circleelement);
 
@@ -121,36 +135,64 @@ export class MovieComponent implements OnInit {
     // this.click = Observable.fromEvent(document.getElementById("button"), "click");
     this.click = Observable.fromEvent(this.buttonn.nativeElement, "click");
 
-    this.click.subscribe(
-      e => this.load("movies.json"),
-      e => console.log(`error: ${e}`),
-      () => console.log("complete")
-    );
+    // this.click.subscribe(
+    //   e => this.loadWithRender2("movies.json"),
+    //   e => console.log(`error: ${e}`),
+    //   () => console.log("complete")
+    // );
+
+    this.getLocalMovies();
+
+    this.click.mergeMap(e => this.loadWithRender2("movies.json"))
+      .subscribe(o => console.log(o));
   }
+
 
   myFunction() {
     let myVariable: number = 1;
   }
 
-  load(url: string) {
-    let xhr = new XMLHttpRequest();    
-      xhr.addEventListener("load", () => {
-        let moviecollection: Movie[] = this.movies;        
+  loadWithRender2(url: string) {
+    let xhr = new XMLHttpRequest();
+    xhr.addEventListener("load", () => {
+      //if (xhr.status === 200) {
+        let moviecollection: Movie[] = this.movies;
         moviecollection.forEach(m => {
-        //for(let i = 0; i < moviecollection.length; i++) {
-        //for(let m of moviecollection) {
-          let div = document.createElement("div");
-          div.innerText = m.name;
-          //this.output.appendChild(div);
-          //document.getElementById("output").appendChild(div);
-          this.output.nativeElement.appendChild(div);
+          let div = this.renderer.createElement("div");
+          const text = this.renderer.createText(m.name + " " + "starring: " + m.cast);
 
+          this.renderer.appendChild(div, text);
+          this.renderer.appendChild(this.output.nativeElement, div);
         });
+      // } else {
+      //   this.observer.error(xhr.statusText);
+      // }
     });
-
     xhr.open("GET", url);
     xhr.send();
+
+    return this.movies;
   }
+
+  // load(url: string) {
+  //   let xhr = new XMLHttpRequest();
+  //   xhr.addEventListener("load", () => {
+  //     let moviecollection: Movie[] = this.movies;
+  //     moviecollection.forEach(m => {
+  //       //for(let i = 0; i < moviecollection.length; i++) {
+  //       //for(let m of moviecollection) {
+  //       let div = document.createElement("div");
+  //       div.innerText = m.name;
+  //       //this.output.appendChild(div);
+  //       //document.getElementById("output").appendChild(div);
+  //       this.output.nativeElement.appendChild(div);
+
+  //     });
+  //   });
+
+  //   xhr.open("GET", url);
+  //   xhr.send();
+  // }
 
   // onNext(value) {
   //   this.circle.nativeElement.style.left = value.x + "px";
@@ -170,12 +212,32 @@ export class MovieComponent implements OnInit {
   //       //this.output.appendChild(div);
   //       //document.getElementById("output").appendChild(div);
   //       this.output.nativeElement.appendChild(div);
-        
+
   //     });
   //   });
 
   //   xhr.open("GET", url);
   //   xhr.send();
   // }
+
+  Counter() {
+    this.counter.increment(1);
+  }
+
+  getLocalMovies() {
+    //let movies:Movie[]; 
+    this.service.getLocalMovies('../assets/movies.json')
+    .subscribe(
+      movie => this.movies = movie,
+        (err: HttpErrorResponse) => {
+          if (err.error instanceof Error) {
+            console.log("Client-side error occurred in the getLocalMovies()")
+          } else {
+            console.log("Server-side error occured in the getLocalMovies()");
+          }
+        }
+    );
+    //return this.movies;
+  }
 
 }

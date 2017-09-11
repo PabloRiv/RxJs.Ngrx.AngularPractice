@@ -2,24 +2,40 @@ import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { HttpClientModule } from "@angular/common/http";
 
+/* App Root */
 import { AppComponent } from "./app.component";
-import { MovieComponent } from "./movie/movie.component";
+
+/* Feature Modules */
+import { CoreModule } from "./core/core.module";
+import { SharedModule } from "./shared/shared.module";
+import { MovieModule } from "./movie/movie.module";
+
+/* Routing Module */
+import { AppRoutingModule } from "./app-routing.module";
+
+/* Components */
 import { VacationComponent } from "./vacation/vacation.component";
-import { routing } from "./app-routing.module";
-import { MovieService } from "./movie/movie.service";
+
+/* Services */
 
 @NgModule({
   declarations: [
     AppComponent,
-    MovieComponent,
     VacationComponent
   ],
   imports: [
     BrowserModule,
-    routing,
-    HttpClientModule
+    AppRoutingModule,
+    CoreModule,
+    HttpClientModule,
+    // HttpClient,
+    // Injectable,
+    // Observable,
+    //SharedModule.forRoot(),
+    SharedModule,
+    MovieModule
   ],
-  providers: [MovieService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
