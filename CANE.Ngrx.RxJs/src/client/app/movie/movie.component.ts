@@ -34,7 +34,7 @@ export class MovieComponent implements OnInit {
   @ViewChild("buttonel", { read: ElementRef }) buttonn: ElementRef;
 
   // click = Observable.fromEvent(this.button, "click");
-  click = null;
+  //click = null;
 
   // demo of using with events. 
   // source = Observable.fromEvent(document, "mousemove")
@@ -86,7 +86,7 @@ export class MovieComponent implements OnInit {
     // this.service.getLocalMovies()
     //   .subscribe(movie => this.movies.push(movie));
 
-    
+
 
     // this.service.getLocalMovies('../assets/movies.json')
     //   .subscribe(
@@ -133,7 +133,7 @@ export class MovieComponent implements OnInit {
     // let button = this.el.nativeElement(this.buttonn);
     //let button = this.el.nativeElement(this.buttonel);
     // this.click = Observable.fromEvent(document.getElementById("button"), "click");
-    this.click = Observable.fromEvent(this.buttonn.nativeElement, "click");
+    //this.click = Observable.fromEvent(this.buttonn.nativeElement, "click");
 
     // this.click.subscribe(
     //   e => this.loadWithRender2("movies.json"),
@@ -141,10 +141,10 @@ export class MovieComponent implements OnInit {
     //   () => console.log("complete")
     // );
 
-    this.getLocalMovies();
+    //this.getLocalMovies();
 
-    this.click.mergeMap(e => this.loadWithRender2("movies.json"))
-      .subscribe(o => console.log(o));
+    // this.click.mergeMap(e => this.loadWithRender2("movies.json"))
+    //   .subscribe(o => console.log(o));
   }
 
 
@@ -156,14 +156,14 @@ export class MovieComponent implements OnInit {
     let xhr = new XMLHttpRequest();
     xhr.addEventListener("load", () => {
       //if (xhr.status === 200) {
-        let moviecollection: Movie[] = this.movies;
-        moviecollection.forEach(m => {
-          let div = this.renderer.createElement("div");
-          const text = this.renderer.createText(m.name + " " + "starring: " + m.cast);
+      let moviecollection: Movie[] = this.movies;
+      moviecollection.forEach(m => {
+        let div = this.renderer.createElement("div");
+        const text = this.renderer.createText(m.name + " " + "starring: " + m.cast);
 
-          this.renderer.appendChild(div, text);
-          this.renderer.appendChild(this.output.nativeElement, div);
-        });
+        this.renderer.appendChild(div, text);
+        this.renderer.appendChild(this.output.nativeElement, div);
+      });
       // } else {
       //   this.observer.error(xhr.statusText);
       // }
@@ -223,21 +223,46 @@ export class MovieComponent implements OnInit {
   Counter() {
     this.counter.increment(1);
   }
-
+  // movie => this.movies = movie,
+  //getLocalMovies(): Movie[] {
   getLocalMovies() {
-    //let movies:Movie[]; 
+    let movieResults: Movie[];
+    let executed: boolean = false;
     this.service.getLocalMovies('../assets/movies.json')
-    .subscribe(
-      movie => this.movies = movie,
-        (err: HttpErrorResponse) => {
-          if (err.error instanceof Error) {
-            console.log("Client-side error occurred in the getLocalMovies()")
-          } else {
-            console.log("Server-side error occured in the getLocalMovies()");
-          }
+      //.do(x => this.results(this.movies))
+      .subscribe(
+      //movie => movieResults = movie,
+      (movie) => {
+        this.movies = movie
+
+      },
+      (err: HttpErrorResponse) => {
+        if (err.error instanceof Error) {
+          console.log("Client-side error occurred in the getLocalMovies()")
+        } else {
+          //console.log("Server-side error occured in the getLocalMovies()");
+          console.log("no error here");
         }
+      },
+      () => {
+        console.log("call complete")
+        this.results(this.movies)
+      }
     );
-    //return this.movies;
+    //return movieResults;
   }
 
+  results(moviecollection: Movie[]) {
+    // let moviecollection: Movie[] = this.getLocalMovies();
+    // this.getLocalMovies();
+    //let moviecollection: Movie[] = this.movies;
+    moviecollection.forEach(m => {
+      let div = this.renderer.createElement("div");
+      const text = this.renderer.createText(m.name + " " + "starring: " + m.cast);
+
+      this.renderer.appendChild(div, text);
+      this.renderer.appendChild(this.output.nativeElement, div);
+    });
+    return true;
+  }
 }
