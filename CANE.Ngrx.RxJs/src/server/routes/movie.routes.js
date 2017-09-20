@@ -1,16 +1,17 @@
-//const ReadPreference = require('mongodb').ReadPreference;
-//const router = express.Router();
-//const mongoose = require('mongoose');
-//const Movie = require('../models/movie.model');
+// const ReadPreference = require('mongodb').ReadPreference;
+// const router = express.Router();
+// const mongoose = require('mongoose');
+// const Movie = require('../models/movie.model');
 const express = require('express');
+
 const router = express.Router();
-var _ = require('lodash');
+const _ = require('lodash');
 
 const movieService = require('../services/movie.service');
 
-//require('./db.connect').connect();
+// require('./db.connect').connect();
 
-//module.exports = function (app) {
+// module.exports = function (app) {
 
 router.get('/movies', (req, res) => {
     movieService.getMovies(req, res);
@@ -35,7 +36,7 @@ router.post('/movie', (req, res) => {
 //         res.status(201).json(movie);
 //         console.log('Movie created successfully!');
 //     });
-//});
-//}
+// });
+// }
 
 module.exports = router;

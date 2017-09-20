@@ -220,45 +220,44 @@ export class MovieComponent implements OnInit {
   //   xhr.send();
   // }
 
-  Counter() {
+  Counter():void {
     this.counter.increment(1);
   }
   // movie => this.movies = movie,
-  //getLocalMovies(): Movie[] {
-  getLocalMovies() {
+  // getLocalMovies(): Movie[] {
+  getLocalMovies(): void {
     let movieResults: Movie[];
     let executed: boolean = false;
-    this.service.getLocalMovies('../assets/movies.json')
-      //.do(x => this.results(this.movies))
+    this.service.getLocalMovies("../assets/movies.json")
+      // .do(x => this.results(this.movies))
       .subscribe(
-      //movie => movieResults = movie,
+      // movie => movieResults = movie,
       (movie) => {
-        this.movies = movie
-
+        this.movies = movie;
       },
       (err: HttpErrorResponse) => {
         if (err.error instanceof Error) {
           console.log("Client-side error occurred in the getLocalMovies()")
         } else {
-          //console.log("Server-side error occured in the getLocalMovies()");
+          // console.log("Server-side error occured in the getLocalMovies()");
           console.log("no error here");
         }
       },
       () => {
-        console.log("call complete")
-        this.results(this.movies)
+        console.log("call complete");
+        this.results(this.movies);
       }
     );
-    //return movieResults;
+    // return movieResults;
   }
 
-  results(moviecollection: Movie[]) {
+  results(moviecollection: Movie[]):boolean {
     // let moviecollection: Movie[] = this.getLocalMovies();
     // this.getLocalMovies();
-    //let moviecollection: Movie[] = this.movies;
+    // let moviecollection: Movie[] = this.movies;
     moviecollection.forEach(m => {
-      let div = this.renderer.createElement("div");
-      const text = this.renderer.createText(m.name + " " + "starring: " + m.cast);
+      let div: string = this.renderer.createElement("div");
+      const text: string = this.renderer.createText(m.name + " " + "starring: " + m.cast);
 
       this.renderer.appendChild(div, text);
       this.renderer.appendChild(this.output.nativeElement, div);

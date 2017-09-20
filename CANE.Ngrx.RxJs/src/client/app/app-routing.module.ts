@@ -3,7 +3,7 @@ import { Routes, RouterModule} from "@angular/router";
 import { MovieComponent } from "./movie/movie.component";
 import { VacationComponent } from "./vacation/vacation.component";
 
-//const APP_ROUTES: Routes = [
+// const APP_ROUTES: Routes = [
 export const routes: Routes = [
   { path: "", redirectTo: "/gotomovies", pathMatch: "full" },
   { path: "gotomovies", loadChildren: "app/movie/movie.module#MovieModule" },
@@ -11,11 +11,11 @@ export const routes: Routes = [
   { path: "govacation", component: VacationComponent },
 ];
 
-//export const routing = RouterModule.forRoot(APP_ROUTES);
+// export const routing = RouterModule.forRoot(APP_ROUTES);
 
 @NgModule({
   imports: [
-    [RouterModule.forRoot(routes)],       
+    [RouterModule.forRoot(routes)],
   ],
   exports: [
     RouterModule
